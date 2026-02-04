@@ -25,21 +25,21 @@ export default function LandingPage() {
         </main>
         
         {/* Footer */}
-        <footer className="py-8 border-t border-border bg-card/30 backdrop-blur-sm">
-          <div className="container mx-auto px-4">
-            <div className="text-center text-sm text-muted-foreground space-y-2">
-              <div className="flex flex-wrap justify-center gap-4 mb-3">
+        <footer className="py-6 sm:py-8 border-t border-border bg-card/30 backdrop-blur-sm">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="text-center text-xs sm:text-sm text-muted-foreground space-y-2">
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-3 px-2">
                 <a href="#" className="hover:text-foreground transition-colors">About</a>
-                <span>|</span>
+                <span className="hidden sm:inline">|</span>
                 <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-                <span>|</span>
+                <span className="hidden sm:inline">|</span>
                 <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-                <span>|</span>
+                <span className="hidden sm:inline">|</span>
                 <a href="#" className="hover:text-foreground transition-colors">Support</a>
-                <span>|</span>
+                <span className="hidden sm:inline">|</span>
                 <a href="#" className="hover:text-foreground transition-colors">Contact</a>
               </div>
-              <p className="mb-2">© 2026 I'm Fine. All Rights Reserved.</p>
+              <p className="mb-2 text-xs sm:text-sm">© 2026 I'm Fine. All Rights Reserved.</p>
               <p className="text-xs">
                 Built with <Heart className="inline h-3 w-3 text-destructive" /> using{' '}
                 <a

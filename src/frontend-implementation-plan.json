@@ -1,41 +1,143 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Full-page hopeful background image for Community Testimonials page",
+  "title": "My Account profile expansion, plan options, expiration handling UI, newsletter opt-in, and disclosure updates (frontend-only)",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Render a full-viewport, cover-style hopeful transformation background image behind all Testimonials page content with a readability overlay that preserves interactions.",
+      "id": "REQ-6",
+      "summary": "Update My Account plan dropdown to show all required plan term/price options and persist the user’s selection via backend calls, rehydrating on refresh.",
       "acceptanceCriteria": [
-        "The Testimonials page background is an image (not a gradient) and spans the full viewport and scroll height (cover, centered, no tiling).",
-        "Foreground content (header, form, testimonial cards, footer) remains readable on top of the background via a suitable overlay (e.g., translucent + optional blur).",
-        "The background does not interfere with page interactions (no layout shifts; scrolling and form submission work as before)."
+        "My Account plan dropdown shows all required options exactly (Free, Basic monthly/6-month/year, Premier monthly/6-month/year) with the listed prices and 'No auto renewals' text for 6-month and yearly options",
+        "Selecting a plan updates persisted backend account data for the current user",
+        "Reloading the app shows the previously selected plan option"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/TestimonialsPage.tsx",
+          "path": "frontend/src/hooks/usePlan.ts",
           "operation": "modify",
-          "description": "Replace the current gradient page wrapper with a layered background treatment: a fixed full-viewport background image (cover/center/no-repeat) behind all content, plus a translucent overlay (optionally with backdrop blur) for readability. Ensure the background layers are non-interactive (e.g., pointer-events none) and that header/main/footer remain in the foreground content layer without affecting existing scrolling or form submission behavior."
+          "description": "Replace localStorage-only plan state with backend-backed plan state derived from getCallerUserProfile().selectedPlan; add mutations that call backend selectPlan(plan) (and update caches) so selections persist across reloads."
+        },
+        {
+          "path": "frontend/src/pages/MyAccountPage.tsx",
+          "operation": "modify",
+          "description": "Update the plan dropdown to use backend PlanOption values and render the full list of required options with exact price/term text, including the 'No auto renewals' language for 6-month and yearly variants. Use shadcn-ui Select/Label/Card to present options (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/utils/plan.ts",
+          "operation": "create",
+          "description": "Add centralized plan constants/mappings: PlanOption -> display label (with prices and 'No auto renewals' text), plus helper mapping PlanOption -> plan level (free/basic/premier) for feature gating."
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Add and reference the generated butterfly-sunrise background image as a static asset for Testimonials page usage.",
+      "id": "REQ-7",
+      "summary": "Reflect plan expiration lifecycle in the UI by showing expiration on My Account, using effective-plan-as-Free after expiration for feature gating, and triggering expiration checks on app load.",
       "acceptanceCriteria": [
-        "The new background image file exists at frontend/public/assets/generated with the exact filename specified in imageRequirements.required.",
-        "TestimonialsPage.tsx references the new image via a /assets/generated/... path and renders it as the page background."
+        "After payment is recorded for a paid plan, My Account shows a populated expiration date",
+        "If the current time is past expiration, the effective plan is treated as Free (feature gating uses Free access) even if a paid plan was previously selected",
+        "If the current time is past expiration + 7 days, the backend deletes the user’s stored account/profile data and associated user-owned data (e.g., journal entries, mood entries) and subsequent fetches behave like a new/empty account"
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
-          "operation": "create",
-          "description": "Add the generated static background image asset for the Testimonials page at this exact path and filename so it can be referenced directly by the frontend (no backend involvement)."
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "When authenticated, call the backend capability checkAndHandleExpirations() on app startup (and/or periodically) and gracefully handle authorization/trap errors, then allow React Query to refetch/rehydrate user/profile-dependent UI."
         },
         {
-          "path": "frontend/src/pages/TestimonialsPage.tsx",
+          "path": "frontend/src/hooks/usePlan.ts",
           "operation": "modify",
-          "description": "Reference the static asset at /assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png as the Testimonials page background image source, ensuring it is rendered as the full-page background behind all page content."
+          "description": "Add an 'effectivePlanLevel' computed value based on userProfile.planExpirationTimestamp and current time; if expired, return Free for gating regardless of selected paid plan option."
+        },
+        {
+          "path": "frontend/src/pages/ToolsPage.tsx",
+          "operation": "modify",
+          "description": "Update feature gating to use the computed effective plan level (free/basic/premier) rather than localStorage state, ensuring behavior becomes Free after expiration."
+        },
+        {
+          "path": "frontend/src/pages/MyAccountPage.tsx",
+          "operation": "modify",
+          "description": "Display the plan expiration date in the Account Information form using the timestamp returned on the UserProfile, and add a clear UI message when the plan is expired (effective access is Free). Use shadcn-ui Alert/Card typography as needed (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/utils/time.ts",
+          "operation": "create",
+          "description": "Add a small formatting helper to convert backend Time (bigint) into a user-friendly date string for plan start/expiration display."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Convert the My Account “Account Information” box into an editable form for the required profile fields with save + refresh rehydration, including DOB format validation.",
+      "acceptanceCriteria": [
+        "User can edit the required fields and save them",
+        "Date of Birth input enforces or validates MM/DD/YYYY format with user-facing error messaging on invalid format",
+        "Saved values display in the same My Account form after reload"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/MyAccountPage.tsx",
+          "operation": "modify",
+          "description": "Replace the static Name display with an editable form collecting Full Name, Date of Birth (MM/DD/YYYY), City, State, Email, Phone (optional), Plan enrolled in, and Plan expiration date; add Save behavior that calls saveCallerUserProfile(profile) and rehydrates from getCallerUserProfile() on refresh. Compose existing shadcn-ui form primitives (Card, Label, Select, Input, Button, Alert) without editing ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
+          "operation": "modify",
+          "description": "Extend save behavior support for the expanded UserProfile shape by ensuring the save mutation invalidates/refetches currentUserProfile and surfaces errors for UI display."
+        },
+        {
+          "path": "frontend/src/utils/validation.ts",
+          "operation": "create",
+          "description": "Add MM/DD/YYYY validation helper for Date of Birth with a clear error message string that the My Account form can display when invalid."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Ensure authenticated navigation always shows Dashboard, My Account, and Tools as clear clickable destinations accessible from within My Account.",
+      "acceptanceCriteria": [
+        "Authenticated header/nav shows Dashboard, My Account, and Tools navigation items",
+        "Clicking each item navigates to the correct page without a no-op"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Keep Dashboard/My Account/Tools visible in the authenticated header and ensure Tools remains clickable even if plan selection is missing/expired; route clicks to the correct destination (e.g., redirect to My Account with guidance) rather than disabling the control. Continue using the existing GreenButton/shadcn-ui composition (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add a My Account Yes/No newsletter opt-in control with the exact question text and persist the selection via backend calls.",
+      "acceptanceCriteria": [
+        "The exact question text is displayed on My Account",
+        "Selecting Yes persists newsletterOptIn=true in backend; selecting No persists newsletterOptIn=false (or unset) in backend",
+        "The persisted selection is reflected when revisiting My Account"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/MyAccountPage.tsx",
+          "operation": "modify",
+          "description": "Add the exact newsletter question text and a Yes/No control (e.g., shadcn-ui RadioGroup or Select) within the Account Information area; persist changes by calling backend toggleNewsletterOptIn(optIn) and/or saving the profile, and reflect the persisted value when reloading. Use shadcn-ui form components for consistent UI (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/hooks/useNewsletterOptIn.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook that calls backend toggleNewsletterOptIn(optIn) and invalidates currentUserProfile so My Account rehydrates consistently."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Update My Account disclosure/legal content to include non-auto-renew language for 6-month/year options and the expiration/downgrade/grace-period/auto-deletion policy.",
+      "acceptanceCriteria": [
+        "The Legal & Policies content on My Account includes text covering: non-auto-renew for 6-month and yearly options, plan expiration behavior, downgrade to Free on expiration date, 1-week grace period, and auto-deletion after the grace period"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/MyAccountPage.tsx",
+          "operation": "modify",
+          "description": "Revise the Legal & Policies accordion text to explicitly document: 6-month and yearly options are non-auto-renew, plan expiration date behavior, downgrade to Free on expiration, 1-week grace period with Free access, and auto-deletion after the grace period; keep changes confined to the existing My Account legal sections."
         }
       ]
     }

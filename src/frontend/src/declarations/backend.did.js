@@ -18,8 +18,29 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Time = IDL.Int;
+export const PlanOption = IDL.Variant({
+  'premierYearly' : IDL.Null,
+  'premierMonthly' : IDL.Null,
+  'basicSixMonth' : IDL.Null,
+  'premierSixMonth' : IDL.Null,
+  'free' : IDL.Null,
+  'basicYearly' : IDL.Null,
+  'basicMonthly' : IDL.Null,
+});
+export const UserProfile = IDL.Record({
+  'planExpirationTimestamp' : IDL.Opt(Time),
+  'planStartTimestamp' : IDL.Opt(Time),
+  'dateOfBirth' : IDL.Opt(IDL.Text),
+  'city' : IDL.Opt(IDL.Text),
+  'newsletterOptIn' : IDL.Bool,
+  'name' : IDL.Text,
+  'isActive' : IDL.Bool,
+  'email' : IDL.Opt(IDL.Text),
+  'state' : IDL.Opt(IDL.Text),
+  'phone' : IDL.Opt(IDL.Text),
+  'selectedPlan' : PlanOption,
+});
 export const JournalEntry = IDL.Record({
   'id' : IDL.Nat,
   'title' : IDL.Text,
@@ -38,6 +59,7 @@ export const idlService = IDL.Service({
   'addJournalEntry' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
   'addMood' : IDL.Func([Mood], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'checkAndHandleExpirations' : IDL.Func([], [], []),
   'deleteJournalEntry' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -50,8 +72,11 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'recordPayment' : IDL.Func([PlanOption], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'selectPlan' : IDL.Func([PlanOption], [], []),
   'submitTestimonial' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'toggleNewsletterOptIn' : IDL.Func([IDL.Bool], [], []),
   'updateJournalEntry' : IDL.Func(
       [IDL.Nat, IDL.Text, IDL.Text],
       [IDL.Bool],
@@ -72,8 +97,29 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Time = IDL.Int;
+  const PlanOption = IDL.Variant({
+    'premierYearly' : IDL.Null,
+    'premierMonthly' : IDL.Null,
+    'basicSixMonth' : IDL.Null,
+    'premierSixMonth' : IDL.Null,
+    'free' : IDL.Null,
+    'basicYearly' : IDL.Null,
+    'basicMonthly' : IDL.Null,
+  });
+  const UserProfile = IDL.Record({
+    'planExpirationTimestamp' : IDL.Opt(Time),
+    'planStartTimestamp' : IDL.Opt(Time),
+    'dateOfBirth' : IDL.Opt(IDL.Text),
+    'city' : IDL.Opt(IDL.Text),
+    'newsletterOptIn' : IDL.Bool,
+    'name' : IDL.Text,
+    'isActive' : IDL.Bool,
+    'email' : IDL.Opt(IDL.Text),
+    'state' : IDL.Opt(IDL.Text),
+    'phone' : IDL.Opt(IDL.Text),
+    'selectedPlan' : PlanOption,
+  });
   const JournalEntry = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
@@ -92,6 +138,7 @@ export const idlFactory = ({ IDL }) => {
     'addJournalEntry' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
     'addMood' : IDL.Func([Mood], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'checkAndHandleExpirations' : IDL.Func([], [], []),
     'deleteJournalEntry' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -104,8 +151,11 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'recordPayment' : IDL.Func([PlanOption], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'selectPlan' : IDL.Func([PlanOption], [], []),
     'submitTestimonial' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'toggleNewsletterOptIn' : IDL.Func([IDL.Bool], [], []),
     'updateJournalEntry' : IDL.Func(
         [IDL.Nat, IDL.Text, IDL.Text],
         [IDL.Bool],

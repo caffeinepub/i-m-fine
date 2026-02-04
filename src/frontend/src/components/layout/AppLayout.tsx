@@ -1,11 +1,12 @@
 import { useInternetIdentity } from '../../hooks/useInternetIdentity';
 import { useGetCallerUserProfile } from '../../hooks/useCurrentUserProfile';
 import GreenButton from '../GreenButton';
-import { LayoutDashboard, Wrench, LogOut, Heart } from 'lucide-react';
+import { LayoutDashboard, Wrench, LogOut, Heart, User } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import SanctuaryBackground from './SanctuaryBackground';
+import { usePlan } from '../../hooks/usePlan';
 
-type Page = 'dashboard' | 'tools';
+type Page = 'dashboard' | 'tools' | 'account';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -16,11 +17,16 @@ interface AppLayoutProps {
 export default function AppLayout({ children, currentPage, onNavigate }: AppLayoutProps) {
   const { clear } = useInternetIdentity();
   const { data: userProfile } = useGetCallerUserProfile();
+  const { selectedPlan } = usePlan();
   const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     await clear();
     queryClient.clear();
+  };
+
+  const handleToolsClick = () => {
+    onNavigate('tools');
   };
 
   return (
@@ -45,15 +51,23 @@ export default function AppLayout({ children, currentPage, onNavigate }: AppLayo
                   className="gap-2"
                 >
                   <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
+                  <span className="hidden sm:inline">Dashboard</span>
                 </GreenButton>
                 <GreenButton
                   variant={currentPage === 'tools' ? 'default' : 'ghost'}
-                  onClick={() => onNavigate('tools')}
+                  onClick={handleToolsClick}
                   className="gap-2"
                 >
                   <Wrench className="h-4 w-4" />
-                  Tools
+                  <span className="hidden sm:inline">Tools</span>
+                </GreenButton>
+                <GreenButton
+                  variant={currentPage === 'account' ? 'default' : 'ghost'}
+                  onClick={() => onNavigate('account')}
+                  className="gap-2"
+                >
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline">My Account</span>
                 </GreenButton>
               </nav>
 

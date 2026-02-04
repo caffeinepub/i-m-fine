@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 26,
-  "summary": "ICP canister-based mental wellness web app template with Internet Identity authentication, user profile setup, journaling, mood check-ins, coping tools (breathing, grounding, thought reframing), and a React + Tailwind/shadcn-ui frontend plus Motoko backend authorization/access control and build/deploy templates.",
+  "projectStateVersion": 44,
+  "summary": "Scope expanded to refine My Account details and subscription behavior: My Account must store user profile fields directly on the account page, support plan options including multi-term (monthly/6-month/year) with no auto-renew, display plan expiration after payment, and enforce expiration handling (downgrade to Free on expiry + 1-week grace period before auto-deletion). Newsletter opt-in is captured and stored in-app; disclosures/refund/legal statements remain accessible in-app with updated rules.",
   "existing_features": [
     {
       "id": "IF-1",
@@ -156,18 +156,80 @@
       "version": 1
     },
     {
-      "id": "feature-update-the-community-testimonials-page-frontend-src-pages-testimonialspage-tsx-to-use-a-full-page-background-image-with-gentle-hopeful-transformation-imagery-butterfly-flying-into-a-beautiful-sunrise-that-covers-the-entire-viewport-behind-all-page-content",
-      "title": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
+      "id": "IF-14",
+      "title": "My Account page routing and navigation rename",
+      "synonyms": [
+        "MyAccountPage",
+        "My Account nav",
+        "Dashboard nav rename"
+      ],
+      "description": "Adds a dedicated MyAccountPage and updates app routing/navigation so the entry previously labeled \"Dashboard\" (next to Tools) is now \"My Account\" with a defined route.",
       "reqIds": [
-        "REQ-1"
+        "AR-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-the-new-generated-background-image-as-a-static-asset-under-frontend-public-assets-generated-and-reference-it-directly-from-the-testimonials-page-do-not-route-image-loading-through-the-backend",
-      "title": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
+      "id": "IF-15",
+      "title": "Plan state hook and Free-plan UI gating (dashboard/tools) with journaling limits",
+      "synonyms": [
+        "usePlan",
+        "plan-based dashboard",
+        "Free plan entitlements",
+        "journaling cap"
+      ],
+      "description": "Introduces plan/state management via a frontend plan hook and updates relevant pages/components (e.g., Dashboard/Tools/Journal) to support plan-based UI gating, including Free-plan journaling usage limits.",
       "reqIds": [
-        "REQ-2"
+        "AR-1",
+        "AR-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-plan-selection-support-for-the-following-explicit-plan-options-including-term-variants-and-persist-the-selected-option-in-the-backend-free-0-basic-9-99-a-month-basic-59-94-for-6-months-no-auto-renewals-basic-109-89-for-a-year-no-auto-renewals-premier-24-99-a-month-premier-149-94-for-6-months-no-auto-renewals-premier-274-89-for-a-year-no-auto-renewals",
+      "title": "Add plan selection support for the following explicit plan options (including term variants) and persist the selected option in the backend: Free $0; Basic $9.99 a month; Basic $59.94 for 6 months (No auto renewals); Basic $109.89 for a year (No auto renewals); Premier $24.99 a month; Premier $149.94 for 6 months (no auto renewals); Premier $274.89 for a year (no auto renewals).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-plan-expiration-lifecycle-behavior-after-payment-is-recorded-as-received-for-a-non-free-plan-compute-and-store-the-plan-expiration-date-display-it-on-my-account-on-the-expiration-date-automatically-downgrade-the-account-to-free-plan-access-keep-the-account-open-for-1-additional-week-grace-period-with-free-plan-access-then-automatically-delete-the-account-and-all-associated-user-data-from-the-system-after-the-grace-period-ends",
+      "title": "Implement plan expiration lifecycle behavior: after payment is recorded as received for a non-Free plan, compute and store the plan expiration date; display it on My Account. On the expiration date, automatically downgrade the account to Free-plan access. Keep the account open for 1 additional week (grace period) with Free-plan access, then automatically delete the account and all associated user data from the system after the grace period ends.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-my-account-page-ui-so-the-top-account-information-box-becomes-an-editable-form-that-collects-and-displays-full-name-date-of-birth-mm-dd-yyyy-city-state-email-address-phone-number-optional-plan-enrolled-in-and-plan-expiration-date-provide-save-behavior-that-persists-changes-in-the-backend-and-rehydrates-correctly-on-refresh",
+      "title": "Update the My Account page UI so the top \"Account Information\" box becomes an editable form that collects and displays: Full Name, Date of Birth (MM/DD/YYYY), City, State, Email address, Phone number (optional), Plan enrolled in, and Plan expiration date. Provide Save behavior that persists changes in the backend and rehydrates correctly on refresh.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-authenticated-navigation-so-the-user-has-three-clear-clickable-top-level-destinations-available-in-app-dashboard-my-account-tools-ensure-they-are-visible-accessible-from-within-the-my-account-experience-as-described",
+      "title": "Update authenticated navigation so the user has three clear clickable top-level destinations available in-app: Dashboard, My Account, Tools; ensure they are visible/accessible from within the My Account experience as described.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-my-account-ui-control-for-the-newsletter-question-would-you-like-to-join-our-weekly-newsletter-with-yes-no-selection-and-persist-the-user-s-selection-to-the-backend-recorded-automatically-when-the-answer-is-yes",
+      "title": "Add a My Account UI control for the newsletter question: \"Would you like to join our Weekly Newsletter?\" with Yes/No selection, and persist the user’s selection to the backend (recorded automatically when the answer is Yes).",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-in-app-disclosure-legal-content-to-add-the-new-rules-described-by-the-user-including-plan-non-auto-renew-language-for-the-new-plan-options-and-the-expiration-downgrade-grace-period-auto-deletion-policy",
+      "title": "Update the in-app disclosure/legal content to add the new rules described by the user, including plan non-auto-renew language for the new plan options and the expiration/downgrade/grace-period/auto-deletion policy.",
+      "reqIds": [
+        "REQ-11"
       ],
       "version": 1
     }
@@ -175,8 +237,66 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Update Community Testimonials page to use a full-page background image with gentle, hopeful transformation imagery (e.g., butterfly flying into a beautiful sunrise).",
+      "summary": "Implement three plan-based dashboards (Free/Basic/Premier) and start with Free plan dashboard build",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "My Account flow: collect registration info (name, city/state, DOB MM/DD/YYYY, email, optional phone), select plan, and capture payment info",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Billing disclosure + enforcement rules: recurring draft on 1st; $10 late fee on 6th; loss of access if unpaid by 15th + $15 late fee; lock by 27th; unlock via support email + invoice; require password update after payment/unlock",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Email the user a signed copy of the disclosure/terms upon agreement, including warning disclosure (not a replacement for professional care), privacy policy, refund policy, and other required legal statements",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Free plan entitlements and limits: allow Mood check-in, Grounding exercises, Community resources, \"What is Trauma?\" 5-part guide + activities, and Journaling limited to 2x/week and max 8/month; ensure Tools reflect only these items",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Post-account-creation UX: show \"account created\" message then prompt weekly newsletter signup; if yes collect first name, DOB (MM/DD), email; regardless of choice log user out and route to Splash login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Lifecycle automation: after 6 weeks on Free plan send upgrade email offering 10% off coupon SAVE10% valid for 5 days with terms reflected",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update My Account page to store full profile fields, add non-auto-renew plan tiers (monthly/6mo/year), show plan expiration, enforce expiry downgrade to Free + 1-week grace then auto-delete, and store newsletter opt-in; update disclosure rules",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Update the backend user account data model to persist the following fields per authenticated user: full name, date of birth (MM/DD/YYYY as text), city, state, email address, phone number (optional), newsletter opt-in (yes/no), selected plan option (including term/pricing variant), plan start timestamp (when payment is recorded as received), and plan expiration timestamp. Ensure the data is retrievable and updatable by the authenticated caller.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Implement any required Motoko state migration so existing stored user profiles (currently only containing name) are safely upgraded to the new persisted account/profile structure with sensible defaults for newly added fields.",
+      "reqIds": [
+        "REQ-12"
+      ],
       "status": "pending"
     }
   ],
@@ -191,15 +311,20 @@
     "Process note: pause/redesign of the landing page is deferred until the user provides additional content to add.",
     "Branding direction reaffirmed: use the user-uploaded original logo as-is (same font/style); do not recreate or alter it.",
     "Process note reaffirmed: do not redesign the landing page yet; user will add more sections in the next chat before any redesign work.",
-    "Generated background images now also include optimized .optim.png variants for runtime use (e.g., via SanctuaryBackground), alongside the original .dim_1920x1080 assets."
+    "Generated background images now also include optimized .optim.png variants for runtime use (e.g., via SanctuaryBackground), alongside the original .dim_1920x1080 assets.",
+    "Added an additional generated background image asset for the Testimonials page (butterfly sunrise), stored under frontend/public/assets/generated.",
+    "Add plan-based access control/entitlements (feature gating) tied to selected subscription plan, including journaling usage limits for Free plan.",
+    "Introduce billing policy handling and account status state machine (active, past_due, suspended, locked) with time-based late fee rules and reactivation flow.",
+    "Add transactional email support for disclosures/legal statements and lifecycle marketing emails (e.g., 6-week upgrade offer with expiring coupon).",
+    "Billing/subscription model updated: plan selection includes term options (monthly/6-month/year) with no auto-renew; system must track plan expiration date, downgrade access to Free on expiration, allow 1-week grace period, then auto-delete account after grace if not renewed.",
+    "My Account page becomes the canonical in-app storage/display for user profile fields (name, DOB, city/state, email, optional phone), plan enrolled, plan expiration date, and newsletter opt-in preference; disclosures/refund/legal statements are attached in-app rather than emailed."
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text (im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png)",
   "generatedImages": [
     {
-      "filename": "im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
-      "description": "Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text",
+      "filename": "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
+      "description": "Generated background image asset for Testimonials page (butterfly sunrise)",
       "targetWidth": 1920,
       "targetHeight": 1080
     }

@@ -3,7 +3,6 @@ import List "mo:core/List";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-import Text "mo:core/Text";
 import Array "mo:core/Array";
 import Order "mo:core/Order";
 import Iter "mo:core/Iter";
@@ -12,13 +11,37 @@ import Int "mo:core/Int";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+import Migration "migration";
+
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // Plan Option Type
+  public type PlanOption = {
+    #free;
+    #basicMonthly;
+    #basicSixMonth;
+    #basicYearly;
+    #premierMonthly;
+    #premierSixMonth;
+    #premierYearly;
+  };
+
   // User Profile Type
   public type UserProfile = {
     name : Text;
+    dateOfBirth : ?Text;
+    city : ?Text;
+    state : ?Text;
+    email : ?Text;
+    phone : ?Text;
+    newsletterOptIn : Bool;
+    selectedPlan : PlanOption;
+    planStartTimestamp : ?Time.Time;
+    planExpirationTimestamp : ?Time.Time;
+    isActive : Bool;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -43,6 +66,117 @@ actor {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
+  };
+
+  // Plan Management Functions
+  public shared ({ caller }) func selectPlan(plan : PlanOption) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can select plans");
+    };
+
+    let existingProfile = switch (userProfiles.get(caller)) {
+      case (?profile) { profile };
+      case (null) {
+        Runtime.trap("Profile not found");
+      };
+    };
+
+    let updatedProfile = {
+      existingProfile with
+      selectedPlan = plan;
+      planStartTimestamp = null;
+      planExpirationTimestamp = null;
+      isActive = false;
+    };
+
+    userProfiles.add(caller, updatedProfile);
+  };
+
+  public shared ({ caller }) func recordPayment(plan : PlanOption) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can record payments");
+    };
+
+    let existingProfile = switch (userProfiles.get(caller)) {
+      case (?profile) { profile };
+      case (null) {
+        Runtime.trap("Profile not found");
+      };
+    };
+
+    let now = Time.now();
+    let expiration = switch (plan) {
+      case (#basicMonthly) { ?(now + 30 * 24 * 60 * 60 * 1000000000) };
+      case (#basicSixMonth) { ?(now + 180 * 24 * 60 * 60 * 1000000000) };
+      case (#basicYearly) { ?(now + 365 * 24 * 60 * 60 * 1000000000) };
+      case (#premierMonthly) { ?(now + 30 * 24 * 60 * 60 * 1000000000) };
+      case (#premierSixMonth) { ?(now + 180 * 24 * 60 * 60 * 1000000000) };
+      case (#premierYearly) { ?(now + 365 * 24 * 60 * 60 * 1000000000) };
+      case (_) { null };
+    };
+
+    let updatedProfile = {
+      existingProfile with
+      selectedPlan = plan;
+      planStartTimestamp = ?now;
+      planExpirationTimestamp = expiration;
+      isActive = true;
+    };
+
+    userProfiles.add(caller, updatedProfile);
+  };
+
+  public shared ({ caller }) func toggleNewsletterOptIn(optIn : Bool) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update newsletter preferences");
+    };
+
+    let existingProfile = switch (userProfiles.get(caller)) {
+      case (?profile) { profile };
+      case (null) {
+        Runtime.trap("Profile not found");
+      };
+    };
+
+    let updatedProfile = {
+      existingProfile with newsletterOptIn = optIn;
+    };
+
+    userProfiles.add(caller, updatedProfile);
+  };
+
+  // Automatic Expiration and Cleanup
+  public shared ({ caller }) func checkAndHandleExpirations() : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can perform this action");
+    };
+
+    let now = Time.now();
+    let profilesToDelete = List.empty<Principal>();
+
+    for ((user, profile) in userProfiles.entries()) {
+      switch (profile.planExpirationTimestamp) {
+        case (?expiration) {
+          if (now > expiration + 7 * 24 * 60 * 60 * 1000000000) {
+            profilesToDelete.add(user);
+          } else if (now > expiration) {
+            let updatedProfile = {
+              profile with
+              selectedPlan = #free;
+              planStartTimestamp = null;
+              planExpirationTimestamp = null;
+              isActive = false;
+            };
+            userProfiles.add(user, updatedProfile);
+          };
+        };
+        case (null) {};
+      };
+    };
+
+    for (user in profilesToDelete.values()) {
+      userProfiles.remove(user);
+    };
   };
 
   // Mood and Journal Types
@@ -183,6 +317,10 @@ actor {
   let testimonials = List.empty<Testimonial>();
 
   public shared ({ caller }) func submitTestimonial(name : Text, message : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can submit testimonials");
+    };
+
     let entry : Testimonial = {
       name;
       message;

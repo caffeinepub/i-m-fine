@@ -20,13 +20,32 @@ export type Mood = { 'sad' : null } |
   { 'happy' : null } |
   { 'neutral' : null };
 export interface MoodEntry { 'mood' : Mood, 'timestamp' : Time }
+export type PlanOption = { 'premierYearly' : null } |
+  { 'premierMonthly' : null } |
+  { 'basicSixMonth' : null } |
+  { 'premierSixMonth' : null } |
+  { 'free' : null } |
+  { 'basicYearly' : null } |
+  { 'basicMonthly' : null };
 export interface Testimonial {
   'name' : string,
   'message' : string,
   'timestamp' : bigint,
 }
 export type Time = bigint;
-export interface UserProfile { 'name' : string }
+export interface UserProfile {
+  'planExpirationTimestamp' : [] | [Time],
+  'planStartTimestamp' : [] | [Time],
+  'dateOfBirth' : [] | [string],
+  'city' : [] | [string],
+  'newsletterOptIn' : boolean,
+  'name' : string,
+  'isActive' : boolean,
+  'email' : [] | [string],
+  'state' : [] | [string],
+  'phone' : [] | [string],
+  'selectedPlan' : PlanOption,
+}
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -35,6 +54,7 @@ export interface _SERVICE {
   'addJournalEntry' : ActorMethod<[string, string], bigint>,
   'addMood' : ActorMethod<[Mood], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'checkAndHandleExpirations' : ActorMethod<[], undefined>,
   'deleteJournalEntry' : ActorMethod<[bigint], boolean>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
@@ -43,8 +63,11 @@ export interface _SERVICE {
   'getTestimonials' : ActorMethod<[], Array<Testimonial>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'recordPayment' : ActorMethod<[PlanOption], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'selectPlan' : ActorMethod<[PlanOption], undefined>,
   'submitTestimonial' : ActorMethod<[string, string], undefined>,
+  'toggleNewsletterOptIn' : ActorMethod<[boolean], undefined>,
   'updateJournalEntry' : ActorMethod<[bigint, string, string], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;

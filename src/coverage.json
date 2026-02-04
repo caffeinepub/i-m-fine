@@ -1,48 +1,135 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-04T07:57:14.600Z",
+  "generatedAt": "2026-02-04T11:41:25.818Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 8,
+    "implemented": 6,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
+        "id": "REQ-10",
+        "summary": "Add a My Account UI control for the newsletter question: \"Would you like to join our Weekly Newsletter?\" with Yes/No selection, and persist the user’s selection to the backend (recorded automatically when the answer is Yes).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/TestimonialsPage.tsx"
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/hooks/useNewsletterOptIn.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/TestimonialsPage.tsx"
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/hooks/useNewsletterOptIn.ts"
         ]
       },
       {
-        "id": "REQ-2",
-        "summary": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
+        "id": "REQ-11",
+        "summary": "Update the in-app disclosure/legal content to add the new rules described by the user, including plan non-auto-renew language for the new plan options and the expiration/downgrade/grace-period/auto-deletion policy.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
-          "frontend/src/pages/TestimonialsPage.tsx"
+          "frontend/src/pages/MyAccountPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
-          "frontend/src/pages/TestimonialsPage.tsx"
+          "frontend/src/pages/MyAccountPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Implement any required Motoko state migration so existing stored user profiles (currently only containing name) are safely upgraded to the new persisted account/profile structure with sensible defaults for newly added fields.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Update the backend user account data model to persist the following fields per authenticated user: full name, date of birth (MM/DD/YYYY as text), city, state, email address, phone number (optional), newsletter opt-in (yes/no), selected plan option (including term/pricing variant), plan start timestamp (when payment is recorded as received), and plan expiration timestamp. Ensure the data is retrievable and updatable by the authenticated caller.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add plan selection support for the following explicit plan options (including term variants) and persist the selected option in the backend: Free $0; Basic $9.99 a month; Basic $59.94 for 6 months (No auto renewals); Basic $109.89 for a year (No auto renewals); Premier $24.99 a month; Premier $149.94 for 6 months (no auto renewals); Premier $274.89 for a year (no auto renewals).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/usePlan.ts",
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/utils/plan.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/usePlan.ts",
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/utils/plan.ts"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Implement plan expiration lifecycle behavior: after payment is recorded as received for a non-Free plan, compute and store the plan expiration date; display it on My Account. On the expiration date, automatically downgrade the account to Free-plan access. Keep the account open for 1 additional week (grace period) with Free-plan access, then automatically delete the account and all associated user data from the system after the grace period ends.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/usePlan.ts",
+          "frontend/src/pages/ToolsPage.tsx",
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/utils/time.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/usePlan.ts",
+          "frontend/src/pages/ToolsPage.tsx",
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/utils/time.ts"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Update the My Account page UI so the top \"Account Information\" box becomes an editable form that collects and displays: Full Name, Date of Birth (MM/DD/YYYY), City, State, Email address, Phone number (optional), Plan enrolled in, and Plan expiration date. Provide Save behavior that persists changes in the backend and rehydrates correctly on refresh.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/hooks/useCurrentUserProfile.ts",
+          "frontend/src/utils/validation.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/MyAccountPage.tsx",
+          "frontend/src/utils/validation.ts"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Update authenticated navigation so the user has three clear clickable top-level destinations available in-app: Dashboard, My Account, Tools; ensure they are visible/accessible from within the My Account experience as described.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/layout/AppLayout.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/layout/AppLayout.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
-    "frontend/src/pages/TestimonialsPage.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/auth/ProfileSetupModal.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useNewsletterOptIn.ts",
+    "frontend/src/hooks/usePlan.ts",
+    "frontend/src/pages/MyAccountPage.tsx",
+    "frontend/src/pages/ToolsPage.tsx",
+    "frontend/src/utils/plan.ts",
+    "frontend/src/utils/time.ts",
+    "frontend/src/utils/validation.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

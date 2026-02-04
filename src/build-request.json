@@ -1,56 +1,162 @@
 {
   "kind": "build_request",
-  "title": "Add full-page hopeful transformation background to Community Testimonials page",
+  "title": "Expand My Account profile fields, plan options, expiration/grace handling, newsletter opt-in, and disclosure updates",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
-      "target": "frontend",
+      "id": "REQ-5",
+      "text": "Update the backend user account data model to persist the following fields per authenticated user: full name, date of birth (MM/DD/YYYY as text), city, state, email address, phone number (optional), newsletter opt-in (yes/no), selected plan option (including term/pricing variant), plan start timestamp (when payment is recorded as received), and plan expiration timestamp. Ensure the data is retrievable and updatable by the authenticated caller.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-2"
         ],
         "quotes": [
-          "On the community testimoanials page a full background that uses transformation imagery, something symbolic, gentle and hopeful. Like a butterfly flying into a beautiful sunrise"
+          "On the Account page that top box needs to ask the user for their Full Name, Date of birth MM/DD/YYYY format, City & State, Email address and Phone number (optional) . All that information should be stored right there in the users account page.",
+          "Should then ask \" Would you like to join our Weekly Newsletter?\" Yes or No and be recorded automatically if the answer is yes."
         ]
       },
       "acceptanceCriteria": [
-        "The Testimonials page background is an image (not a gradient) and spans the full viewport and scroll height (cover, centered, no tiling).",
-        "Foreground content (header, form, testimonial cards, footer) remains readable on top of the background via a suitable overlay (e.g., translucent + optional blur).",
-        "The background does not interfere with page interactions (no layout shifts; scrolling and form submission work as before)."
+        "Backend exposes get/update APIs that allow the authenticated caller to read and write all listed account fields",
+        "Phone number can be omitted without failing validation",
+        "Newsletter opt-in persists and is returned accurately on subsequent fetches"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
-      "target": "frontend",
+      "id": "REQ-6",
+      "text": "Add plan selection support for the following explicit plan options (including term variants) and persist the selected option in the backend: Free $0; Basic $9.99 a month; Basic $59.94 for 6 months (No auto renewals); Basic $109.89 for a year (No auto renewals); Premier $24.99 a month; Premier $149.94 for 6 months (no auto renewals); Premier $274.89 for a year (no auto renewals).",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-2"
         ],
         "quotes": [
-          "a full background that uses transformation imagery... Like a butterfly flying into a beautiful sunrise"
+          "The drop down menu to choose plan level should include these options as well: Free $0, Basic $9.99 a month, $59.94 6 months, $109.89 a year, No auto renewals. Premier $24.99 a month, $149.94 for 6 months, $274.89 for a year, no auto renewals."
         ]
       },
       "acceptanceCriteria": [
-        "The new background image file exists at frontend/public/assets/generated with the exact filename specified in imageRequirements.required.",
-        "TestimonialsPage.tsx references the new image via a /assets/generated/... path and renders it as the page background."
+        "My Account plan dropdown shows all required options exactly (Free, Basic monthly/6-month/year, Premier monthly/6-month/year) with the listed prices and 'No auto renewals' text for 6-month and yearly options",
+        "Selecting a plan updates persisted backend account data for the current user",
+        "Reloading the app shows the previously selected plan option"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement plan expiration lifecycle behavior: after payment is recorded as received for a non-Free plan, compute and store the plan expiration date; display it on My Account. On the expiration date, automatically downgrade the account to Free-plan access. Keep the account open for 1 additional week (grace period) with Free-plan access, then automatically delete the account and all associated user data from the system after the grace period ends.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Once the user chooses a plan a box should populate after payment is received that informs the user of when the account expires.",
+          "The user will have 1 week from the expiration date, with free plan level access to their account before they have to renew, or allow the account to close out.",
+          "On the date of expiration the account goes automatically to the free plan level access.",
+          "The account will stay open for 1 week before the account is auto deleted out of the system."
+        ]
+      },
+      "acceptanceCriteria": [
+        "After payment is recorded for a paid plan, My Account shows a populated expiration date",
+        "If the current time is past expiration, the effective plan is treated as Free (feature gating uses Free access) even if a paid plan was previously selected",
+        "If the current time is past expiration + 7 days, the backend deletes the user’s stored account/profile data and associated user-owned data (e.g., journal entries, mood entries) and subsequent fetches behave like a new/empty account"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update the My Account page UI so the top \"Account Information\" box becomes an editable form that collects and displays: Full Name, Date of Birth (MM/DD/YYYY), City, State, Email address, Phone number (optional), Plan enrolled in, and Plan expiration date. Provide Save behavior that persists changes in the backend and rehydrates correctly on refresh.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Under these links there is a fillabe box that should house the users name, Date of birth MM/DD/YYYY format, City & State, Email address, Plan enrolled in, Plan expiration date."
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can edit the required fields and save them",
+        "Date of Birth input enforces or validates MM/DD/YYYY format with user-facing error messaging on invalid format",
+        "Saved values display in the same My Account form after reload"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Update authenticated navigation so the user has three clear clickable top-level destinations available in-app: Dashboard, My Account, Tools; ensure they are visible/accessible from within the My Account experience as described.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "So the account page should have 3 clickable buttons on the top dashboard, My account, Tools."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Authenticated header/nav shows Dashboard, My Account, and Tools navigation items",
+        "Clicking each item navigates to the correct page without a no-op"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Add a My Account UI control for the newsletter question: \"Would you like to join our Weekly Newsletter?\" with Yes/No selection, and persist the user’s selection to the backend (recorded automatically when the answer is Yes).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Should then ask \" Would you like to join our Weekly Newsletter?\" Yes or No and be recorded automatically if the answer is yes."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The exact question text is displayed on My Account",
+        "Selecting Yes persists newsletterOptIn=true in backend; selecting No persists newsletterOptIn=false (or unset) in backend",
+        "The persisted selection is reflected when revisiting My Account"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Update the in-app disclosure/legal content to add the new rules described by the user, including plan non-auto-renew language for the new plan options and the expiration/downgrade/grace-period/auto-deletion policy.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Add new rules to the disclosure information."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Legal & Policies content on My Account includes text covering: non-auto-renew for 6-month and yearly options, plan expiration behavior, downgrade to Free on expiration date, 1-week grace period, and auto-deletion after the grace period"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Implement any required Motoko state migration so existing stored user profiles (currently only containing name) are safely upgraded to the new persisted account/profile structure with sensible defaults for newly added fields.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Upgrading the canister does not trap due to old profile data shape",
+        "Existing users keep their previously saved name value after upgrade"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui (shadcn components are read-only).",
-    "Keep changes scoped to the Testimonials page background treatment; do not alter backend behavior."
+    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
+    "Do not edit files under frontend/src/components/ui (compose existing shadcn components instead).",
+    "Do not modify any frontend paths marked immutable in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Do not change the testimonials data model, submission flow, or backend canister logic.",
-    "Do not redesign other pages (Landing, Dashboard, Tools) beyond what is necessary to implement the Testimonials page background."
+    "Do not integrate real payment processing (Stripe or other third-party payment providers).",
+    "Do not implement email sending or any email-dependent flows.",
+    "Do not redesign unrelated pages (e.g., Landing page) beyond what is required to add the requested My Account and disclosure changes."
   ],
   "imageRequirements": {
-    "required": [
-      "Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text (im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

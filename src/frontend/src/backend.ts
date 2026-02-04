@@ -102,7 +102,17 @@ export interface JournalEntry {
     timestamp: Time;
 }
 export interface UserProfile {
+    planExpirationTimestamp?: Time;
+    planStartTimestamp?: Time;
+    dateOfBirth?: string;
+    city?: string;
+    newsletterOptIn: boolean;
     name: string;
+    isActive: boolean;
+    email?: string;
+    state?: string;
+    phone?: string;
+    selectedPlan: PlanOption;
 }
 export interface MoodEntry {
     mood: Mood;
@@ -112,6 +122,15 @@ export enum Mood {
     sad = "sad",
     happy = "happy",
     neutral = "neutral"
+}
+export enum PlanOption {
+    premierYearly = "premierYearly",
+    premierMonthly = "premierMonthly",
+    basicSixMonth = "basicSixMonth",
+    premierSixMonth = "premierSixMonth",
+    free = "free",
+    basicYearly = "basicYearly",
+    basicMonthly = "basicMonthly"
 }
 export enum UserRole {
     admin = "admin",
@@ -123,6 +142,7 @@ export interface backendInterface {
     addJournalEntry(title: string, content: string): Promise<bigint>;
     addMood(mood: Mood): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    checkAndHandleExpirations(): Promise<void>;
     deleteJournalEntry(id: bigint): Promise<boolean>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -131,11 +151,14 @@ export interface backendInterface {
     getTestimonials(): Promise<Array<Testimonial>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    recordPayment(plan: PlanOption): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    selectPlan(plan: PlanOption): Promise<void>;
     submitTestimonial(name: string, message: string): Promise<void>;
+    toggleNewsletterOptIn(optIn: boolean): Promise<void>;
     updateJournalEntry(id: bigint, title: string, content: string): Promise<boolean>;
 }
-import type { Mood as _Mood, MoodEntry as _MoodEntry, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Mood as _Mood, MoodEntry as _MoodEntry, PlanOption as _PlanOption, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -194,6 +217,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async checkAndHandleExpirations(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.checkAndHandleExpirations();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.checkAndHandleExpirations();
+            return result;
+        }
+    }
     async deleteJournalEntry(arg0: bigint): Promise<boolean> {
         if (this.processError) {
             try {
@@ -226,14 +263,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n6(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n12(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n6(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n12(this._uploadFile, this._downloadFile, result);
         }
     }
     async getJournalEntries(): Promise<Array<JournalEntry>> {
@@ -254,14 +291,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getMoodHistory();
-                return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+                return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getMoodHistory();
-            return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+            return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTestimonials(): Promise<Array<Testimonial>> {
@@ -306,17 +343,45 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
+    async recordPayment(arg0: PlanOption): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveCallerUserProfile(arg0);
+                const result = await this.actor.recordPayment(to_candid_PlanOption_n19(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveCallerUserProfile(arg0);
+            const result = await this.actor.recordPayment(to_candid_PlanOption_n19(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n21(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n21(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async selectPlan(arg0: PlanOption): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.selectPlan(to_candid_PlanOption_n19(this._uploadFile, this._downloadFile, arg0));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.selectPlan(to_candid_PlanOption_n19(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -331,6 +396,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.submitTestimonial(arg0, arg1);
+            return result;
+        }
+    }
+    async toggleNewsletterOptIn(arg0: boolean): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.toggleNewsletterOptIn(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.toggleNewsletterOptIn(arg0);
             return result;
         }
     }
@@ -349,19 +428,31 @@ export class Backend implements backendInterface {
         }
     }
 }
-function from_candid_MoodEntry_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _MoodEntry): MoodEntry {
-    return from_candid_record_n10(_uploadFile, _downloadFile, value);
+function from_candid_MoodEntry_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _MoodEntry): MoodEntry {
+    return from_candid_record_n16(_uploadFile, _downloadFile, value);
 }
-function from_candid_Mood_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Mood): Mood {
-    return from_candid_variant_n12(_uploadFile, _downloadFile, value);
+function from_candid_Mood_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Mood): Mood {
+    return from_candid_variant_n18(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n7(_uploadFile, _downloadFile, value);
+function from_candid_PlanOption_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PlanOption): PlanOption {
+    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserProfile_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserProfile): UserProfile {
+    return from_candid_record_n7(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRole_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n13(_uploadFile, _downloadFile, value);
 }
 function from_candid_opt_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
+    return value.length === 0 ? null : from_candid_UserProfile_n6(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Time]): Time | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     mood: _Mood;
     timestamp: _Time;
 }): {
@@ -369,20 +460,67 @@ function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uin
     timestamp: Time;
 } {
     return {
-        mood: from_candid_Mood_n11(_uploadFile, _downloadFile, value.mood),
+        mood: from_candid_Mood_n17(_uploadFile, _downloadFile, value.mood),
         timestamp: value.timestamp
     };
 }
-function from_candid_variant_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    sad: null;
-} | {
-    happy: null;
-} | {
-    neutral: null;
-}): Mood {
-    return "sad" in value ? Mood.sad : "happy" in value ? Mood.happy : "neutral" in value ? Mood.neutral : value;
+function from_candid_record_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    planExpirationTimestamp: [] | [_Time];
+    planStartTimestamp: [] | [_Time];
+    dateOfBirth: [] | [string];
+    city: [] | [string];
+    newsletterOptIn: boolean;
+    name: string;
+    isActive: boolean;
+    email: [] | [string];
+    state: [] | [string];
+    phone: [] | [string];
+    selectedPlan: _PlanOption;
+}): {
+    planExpirationTimestamp?: Time;
+    planStartTimestamp?: Time;
+    dateOfBirth?: string;
+    city?: string;
+    newsletterOptIn: boolean;
+    name: string;
+    isActive: boolean;
+    email?: string;
+    state?: string;
+    phone?: string;
+    selectedPlan: PlanOption;
+} {
+    return {
+        planExpirationTimestamp: record_opt_to_undefined(from_candid_opt_n8(_uploadFile, _downloadFile, value.planExpirationTimestamp)),
+        planStartTimestamp: record_opt_to_undefined(from_candid_opt_n8(_uploadFile, _downloadFile, value.planStartTimestamp)),
+        dateOfBirth: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.dateOfBirth)),
+        city: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.city)),
+        newsletterOptIn: value.newsletterOptIn,
+        name: value.name,
+        isActive: value.isActive,
+        email: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.email)),
+        state: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.state)),
+        phone: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.phone)),
+        selectedPlan: from_candid_PlanOption_n10(_uploadFile, _downloadFile, value.selectedPlan)
+    };
 }
-function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    premierYearly: null;
+} | {
+    premierMonthly: null;
+} | {
+    basicSixMonth: null;
+} | {
+    premierSixMonth: null;
+} | {
+    free: null;
+} | {
+    basicYearly: null;
+} | {
+    basicMonthly: null;
+}): PlanOption {
+    return "premierYearly" in value ? PlanOption.premierYearly : "premierMonthly" in value ? PlanOption.premierMonthly : "basicSixMonth" in value ? PlanOption.basicSixMonth : "premierSixMonth" in value ? PlanOption.premierSixMonth : "free" in value ? PlanOption.free : "basicYearly" in value ? PlanOption.basicYearly : "basicMonthly" in value ? PlanOption.basicMonthly : value;
+}
+function from_candid_variant_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -391,14 +529,68 @@ function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function from_candid_vec_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_MoodEntry>): Array<MoodEntry> {
-    return value.map((x)=>from_candid_MoodEntry_n9(_uploadFile, _downloadFile, x));
+function from_candid_variant_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    sad: null;
+} | {
+    happy: null;
+} | {
+    neutral: null;
+}): Mood {
+    return "sad" in value ? Mood.sad : "happy" in value ? Mood.happy : "neutral" in value ? Mood.neutral : value;
+}
+function from_candid_vec_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_MoodEntry>): Array<MoodEntry> {
+    return value.map((x)=>from_candid_MoodEntry_n15(_uploadFile, _downloadFile, x));
 }
 function to_candid_Mood_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Mood): _Mood {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
+function to_candid_PlanOption_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PlanOption): _PlanOption {
+    return to_candid_variant_n20(_uploadFile, _downloadFile, value);
+}
+function to_candid_UserProfile_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserProfile): _UserProfile {
+    return to_candid_record_n22(_uploadFile, _downloadFile, value);
+}
 function to_candid_UserRole_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n4(_uploadFile, _downloadFile, value);
+}
+function to_candid_record_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    planExpirationTimestamp?: Time;
+    planStartTimestamp?: Time;
+    dateOfBirth?: string;
+    city?: string;
+    newsletterOptIn: boolean;
+    name: string;
+    isActive: boolean;
+    email?: string;
+    state?: string;
+    phone?: string;
+    selectedPlan: PlanOption;
+}): {
+    planExpirationTimestamp: [] | [_Time];
+    planStartTimestamp: [] | [_Time];
+    dateOfBirth: [] | [string];
+    city: [] | [string];
+    newsletterOptIn: boolean;
+    name: string;
+    isActive: boolean;
+    email: [] | [string];
+    state: [] | [string];
+    phone: [] | [string];
+    selectedPlan: _PlanOption;
+} {
+    return {
+        planExpirationTimestamp: value.planExpirationTimestamp ? candid_some(value.planExpirationTimestamp) : candid_none(),
+        planStartTimestamp: value.planStartTimestamp ? candid_some(value.planStartTimestamp) : candid_none(),
+        dateOfBirth: value.dateOfBirth ? candid_some(value.dateOfBirth) : candid_none(),
+        city: value.city ? candid_some(value.city) : candid_none(),
+        newsletterOptIn: value.newsletterOptIn,
+        name: value.name,
+        isActive: value.isActive,
+        email: value.email ? candid_some(value.email) : candid_none(),
+        state: value.state ? candid_some(value.state) : candid_none(),
+        phone: value.phone ? candid_some(value.phone) : candid_none(),
+        selectedPlan: to_candid_PlanOption_n19(_uploadFile, _downloadFile, value.selectedPlan)
+    };
 }
 function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Mood): {
     sad: null;
@@ -413,6 +605,37 @@ function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         happy: null
     } : value == Mood.neutral ? {
         neutral: null
+    } : value;
+}
+function to_candid_variant_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PlanOption): {
+    premierYearly: null;
+} | {
+    premierMonthly: null;
+} | {
+    basicSixMonth: null;
+} | {
+    premierSixMonth: null;
+} | {
+    free: null;
+} | {
+    basicYearly: null;
+} | {
+    basicMonthly: null;
+} {
+    return value == PlanOption.premierYearly ? {
+        premierYearly: null
+    } : value == PlanOption.premierMonthly ? {
+        premierMonthly: null
+    } : value == PlanOption.basicSixMonth ? {
+        basicSixMonth: null
+    } : value == PlanOption.premierSixMonth ? {
+        premierSixMonth: null
+    } : value == PlanOption.free ? {
+        free: null
+    } : value == PlanOption.basicYearly ? {
+        basicYearly: null
+    } : value == PlanOption.basicMonthly ? {
+        basicMonthly: null
     } : value;
 }
 function to_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {

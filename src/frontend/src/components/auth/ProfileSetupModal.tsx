@@ -4,6 +4,7 @@ import GreenButton from '../GreenButton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSaveCallerUserProfile } from '../../hooks/useCurrentUserProfile';
+import { PlanOption } from '../../backend';
 
 export default function ProfileSetupModal() {
   const [name, setName] = useState('');
@@ -12,7 +13,12 @@ export default function ProfileSetupModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      saveProfile.mutate({ name: name.trim() });
+      saveProfile.mutate({
+        name: name.trim(),
+        newsletterOptIn: false,
+        isActive: false,
+        selectedPlan: PlanOption.free,
+      });
     }
   };
 
