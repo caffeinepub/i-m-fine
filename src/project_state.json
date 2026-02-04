@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 26,
+  "summary": "ICP canister-based mental wellness web app template with Internet Identity authentication, user profile setup, journaling, mood check-ins, coping tools (breathing, grounding, thought reframing), and a React + Tailwind/shadcn-ui frontend plus Motoko backend authorization/access control and build/deploy templates.",
+  "existing_features": [
+    {
+      "id": "IF-1",
+      "title": "Internet Identity authentication",
+      "synonyms": [
+        "II login",
+        "Internet Identity sign-in"
+      ],
+      "description": "Frontend integrates Internet Identity for login and actor creation; backend supports authenticated access patterns.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-2",
+      "title": "User profile setup modal",
+      "synonyms": [
+        "Profile setup",
+        "Onboarding"
+      ],
+      "description": "ProfileSetupModal to collect/store initial user profile data after authentication; hook for fetching current user profile.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-3",
+      "title": "Dashboard and landing pages",
+      "synonyms": [
+        "LandingPage",
+        "DashboardPage"
+      ],
+      "description": "React pages for landing and authenticated dashboard flow with shared app layout.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-4",
+      "title": "Mood check-in tracking UI",
+      "synonyms": [
+        "MoodCheckInCard",
+        "Mood tracking"
+      ],
+      "description": "Mood check-in card and mood hook to capture and display mood-related entries.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "Journaling (list + editor)",
+      "synonyms": [
+        "JournalEditor",
+        "JournalList",
+        "JournalSection"
+      ],
+      "description": "Journal section with list and editor components plus journal hook for creating/editing entries.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "Coping tools page and components",
+      "synonyms": [
+        "ToolsPage",
+        "BreathingTimer",
+        "Grounding 5-4-3-2-1",
+        "Thought reframing"
+      ],
+      "description": "Tools page including breathing timer, grounding 5-4-3-2-1 exercise, and thought reframing prompt components.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "Motoko backend authorization & access control mixins",
+      "synonyms": [
+        "Authorization module",
+        "Access control"
+      ],
+      "description": "Backend authorization modules (MixinAuthorization, access-control) integrated into main canister for protected calls.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-8",
+      "title": "Frontend-backend integration scaffolding",
+      "synonyms": [
+        "Actor hooks",
+        "Declarations",
+        "backend bindings"
+      ],
+      "description": "Generated backend declarations and frontend actor/util hooks (useActor, backend.ts, backend.d.ts) to call canister methods.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-9",
+      "title": "Build/deploy template for ICP + React",
+      "synonyms": [
+        "build-template",
+        "Dockerfile",
+        "icp.yaml"
+      ],
+      "description": "Project build template including Dockerfile, deploy scripts, canister configs, workspace setup, and image processing scripts.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-10",
+      "title": "Generated branding assets",
+      "synonyms": [
+        "favicon",
+        "hero image",
+        "logo",
+        "icons"
+      ],
+      "description": "Pre-generated public assets (favicon, hero, logo, icons) included under frontend/public/assets/generated.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-11",
+      "title": "Generated background image set",
+      "synonyms": [
+        "background images",
+        "landing backgrounds"
+      ],
+      "description": "Additional pre-generated background images (beach, clouds, landscape, ocean) included under frontend/public/assets/generated for use in layout/hero/background components.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-12",
+      "title": "Expanded landing page sections",
+      "synonyms": [
+        "Marketing sections",
+        "Landing content blocks",
+        "FAQ/Pricing/Social proof"
+      ],
+      "description": "Landing page now includes modular sections/components such as Hero, Value Proposition, Features & Benefits blocks, Social Proof, Privacy & Safety, Pricing, FAQ, and CTA/header/section wrappers for richer pre-auth marketing content.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-13",
+      "title": "Testimonials page and testimonials data hook",
+      "synonyms": [
+        "TestimonialsPage",
+        "useTestimonials",
+        "Testimonials listing"
+      ],
+      "description": "Adds a dedicated TestimonialsPage and a useTestimonials hook to surface testimonial/social-proof content beyond the landing-page Social Proof section.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-community-testimonials-page-frontend-src-pages-testimonialspage-tsx-to-use-a-full-page-background-image-with-gentle-hopeful-transformation-imagery-butterfly-flying-into-a-beautiful-sunrise-that-covers-the-entire-viewport-behind-all-page-content",
+      "title": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-new-generated-background-image-as-a-static-asset-under-frontend-public-assets-generated-and-reference-it-directly-from-the-testimonials-page-do-not-route-image-loading-through-the-backend",
+      "title": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Update Community Testimonials page to use a full-page background image with gentle, hopeful transformation imagery (e.g., butterfly flying into a beautiful sunrise).",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "architectural_notes": [
+    "Frontend: React + Vite + TypeScript + Tailwind CSS with shadcn-ui component library.",
+    "Auth: Internet Identity is used for authentication; frontend actor hooks manage authenticated canister calls.",
+    "Backend: Motoko canister includes authorization/access-control modules to guard endpoints.",
+    "Monorepo/build template includes Dockerfile, deploy.sh, and ICP canister YAML configs; includes scripts to prune/resize images.",
+    "Build template now includes a full pnpm-workspace monorepo scaffold with dedicated backend/frontend canister.yaml templates and a broad pre-vendored shadcn-ui component set for rapid UI composition.",
+    "Frontend build template includes custom ESLint rules to enforce Internet Identity provider usage and to prevent BigInt usage in query keys.",
+    "Branding direction: use the original provided logo and keep the same logo font (do not redesign/recreate the logo font styling).",
+    "Process note: pause/redesign of the landing page is deferred until the user provides additional content to add.",
+    "Branding direction reaffirmed: use the user-uploaded original logo as-is (same font/style); do not recreate or alter it.",
+    "Process note reaffirmed: do not redesign the landing page yet; user will add more sections in the next chat before any redesign work.",
+    "Generated background images now also include optimized .optim.png variants for runtime use (e.g., via SanctuaryBackground), alongside the original .dim_1920x1080 assets."
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text (im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png)",
+  "generatedImages": [
+    {
+      "filename": "im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
+      "description": "Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text",
+      "targetWidth": 1920,
+      "targetHeight": 1080
+    }
+  ],
+  "projectName": "I'm Fine",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

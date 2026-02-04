@@ -1,0 +1,43 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Full-page hopeful background image for Community Testimonials page",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Render a full-viewport, cover-style hopeful transformation background image behind all Testimonials page content with a readability overlay that preserves interactions.",
+      "acceptanceCriteria": [
+        "The Testimonials page background is an image (not a gradient) and spans the full viewport and scroll height (cover, centered, no tiling).",
+        "Foreground content (header, form, testimonial cards, footer) remains readable on top of the background via a suitable overlay (e.g., translucent + optional blur).",
+        "The background does not interfere with page interactions (no layout shifts; scrolling and form submission work as before)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/TestimonialsPage.tsx",
+          "operation": "modify",
+          "description": "Replace the current gradient page wrapper with a layered background treatment: a fixed full-viewport background image (cover/center/no-repeat) behind all content, plus a translucent overlay (optionally with backdrop blur) for readability. Ensure the background layers are non-interactive (e.g., pointer-events none) and that header/main/footer remain in the foreground content layer without affecting existing scrolling or form submission behavior."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add and reference the generated butterfly-sunrise background image as a static asset for Testimonials page usage.",
+      "acceptanceCriteria": [
+        "The new background image file exists at frontend/public/assets/generated with the exact filename specified in imageRequirements.required.",
+        "TestimonialsPage.tsx references the new image via a /assets/generated/... path and renders it as the page background."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated static background image asset for the Testimonials page at this exact path and filename so it can be referenced directly by the frontend (no backend involvement)."
+        },
+        {
+          "path": "frontend/src/pages/TestimonialsPage.tsx",
+          "operation": "modify",
+          "description": "Reference the static asset at /assets/generated/im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png as the Testimonials page background image source, ensuring it is rendered as the full-page background behind all page content."
+        }
+      ]
+    }
+  ]
+}

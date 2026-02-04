@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Calm sanctuary palette: soft sage green, powder pink, soft sky blue */
+        --background: 0.98 0.01 160;
+        --foreground: 0.30 0.02 160;
+        
+        --card: 0.99 0.005 160;
+        --card-foreground: 0.30 0.02 160;
+        
+        --popover: 0.99 0.005 160;
+        --popover-foreground: 0.30 0.02 160;
+        
+        /* Soft sage green for primary */
+        --primary: 0.65 0.10 150;
+        --primary-foreground: 0.98 0.005 150;
+        
+        /* Powder pink for secondary */
+        --secondary: 0.88 0.08 15;
+        --secondary-foreground: 0.30 0.02 15;
+        
+        --muted: 0.94 0.015 160;
+        --muted-foreground: 0.55 0.02 160;
+        
+        /* Soft sky blue accent */
+        --accent: 0.80 0.08 230;
+        --accent-foreground: 0.25 0.02 230;
+        
+        /* Warm coral for destructive */
+        --destructive: 0.60 0.18 25;
+        --destructive-foreground: 0.98 0.005 25;
+        
+        --border: 0.90 0.015 160;
+        --input: 0.90 0.015 160;
+        --ring: 0.65 0.10 150;
+        
+        --chart-1: 0.65 0.10 150;
+        --chart-2: 0.88 0.08 15;
+        --chart-3: 0.80 0.08 230;
+        --chart-4: 0.70 0.12 180;
+        --chart-5: 0.75 0.10 200;
+    }
+
+    .dark {
+        --background: 0.20 0.02 160;
+        --foreground: 0.95 0.01 160;
+        
+        --card: 0.24 0.02 160;
+        --card-foreground: 0.95 0.01 160;
+        
+        --popover: 0.22 0.02 160;
+        --popover-foreground: 0.95 0.01 160;
+        
+        /* Brighter sage for dark mode */
+        --primary: 0.70 0.12 150;
+        --primary-foreground: 0.20 0.02 150;
+        
+        /* Brighter powder pink for dark mode */
+        --secondary: 0.75 0.10 15;
+        --secondary-foreground: 0.20 0.02 15;
+        
+        --muted: 0.28 0.02 160;
+        --muted-foreground: 0.65 0.015 160;
+        
+        /* Brighter sky blue for dark mode */
+        --accent: 0.75 0.10 230;
+        --accent-foreground: 0.20 0.02 230;
+        
+        --destructive: 0.65 0.20 25;
+        --destructive-foreground: 0.20 0.02 25;
+        
+        --border: 0.32 0.02 160;
+        --input: 0.32 0.02 160;
+        --ring: 0.70 0.12 150;
+        
+        --chart-1: 0.70 0.12 150;
+        --chart-2: 0.75 0.10 15;
+        --chart-3: 0.75 0.10 230;
+        --chart-4: 0.68 0.12 180;
+        --chart-5: 0.72 0.10 200;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-display;
+    }
+}

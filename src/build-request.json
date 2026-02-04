@@ -1,0 +1,56 @@
+{
+  "kind": "build_request",
+  "title": "Add full-page hopeful transformation background to Community Testimonials page",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "On the community testimoanials page a full background that uses transformation imagery, something symbolic, gentle and hopeful. Like a butterfly flying into a beautiful sunrise"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Testimonials page background is an image (not a gradient) and spans the full viewport and scroll height (cover, centered, no tiling).",
+        "Foreground content (header, form, testimonial cards, footer) remains readable on top of the background via a suitable overlay (e.g., translucent + optional blur).",
+        "The background does not interfere with page interactions (no layout shifts; scrolling and form submission work as before)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "a full background that uses transformation imagery... Like a butterfly flying into a beautiful sunrise"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The new background image file exists at frontend/public/assets/generated with the exact filename specified in imageRequirements.required.",
+        "TestimonialsPage.tsx references the new image via a /assets/generated/... path and renders it as the page background."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify any files under frontend/src/components/ui (shadcn components are read-only).",
+    "Keep changes scoped to the Testimonials page background treatment; do not alter backend behavior."
+  ],
+  "nonGoals": [
+    "Do not change the testimonials data model, submission flow, or backend canister logic.",
+    "Do not redesign other pages (Landing, Dashboard, Tools) beyond what is necessary to implement the Testimonials page background."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Full-screen background illustration: butterfly in flight toward a warm sunrise with soft clouds and gentle, hopeful color palette; subtle, symbolic transformation mood; no text (im-fine-bg-testimonials-butterfly-sunrise.dim_1920x1080.png)"
+    ],
+    "edits": []
+  }
+}

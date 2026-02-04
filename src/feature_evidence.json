@@ -1,0 +1,43 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-community-testimonials-page-frontend-src-pages-testimonialspage-tsx-to-use-a-full-page-background-image-with-gentle-hopeful-transformation-imagery-butterfly-flying-into-a-beautiful-sunrise-that-covers-the-entire-viewport-behind-all-page-content",
+      "featureTitle": "Update the Community Testimonials page (frontend/src/pages/TestimonialsPage.tsx) to use a full-page background image with gentle, hopeful transformation imagery (butterfly flying into a beautiful sunrise) that covers the entire viewport behind all page content.",
+      "files": [
+        "frontend/src/pages/TestimonialsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-the-new-generated-background-image-as-a-static-asset-under-frontend-public-assets-generated-and-reference-it-directly-from-the-testimonials-page-do-not-route-image-loading-through-the-backend",
+      "featureTitle": "Add the new generated background image as a static asset under frontend/public/assets/generated and reference it directly from the Testimonials page (do not route image loading through the backend).",
+      "files": [
+        "frontend/src/pages/TestimonialsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
