@@ -1,0 +1,143 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-03-02T01:58:24.773Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 6,
+    "implemented": 4,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Extend the backend to store and manage user goals, including therapy milestone goals (e.g., 'Complete 1st session with Serenity', 'Finish 3 CBT exercises', 'Attend a group class') and personal wellness streak targets (e.g., 'Log mood 7 days in a row', 'Use breathing tool 5 times', 'Journal for 3 consecutive days'). Each goal should track: id, title, description, goal type (milestone or streak), target value, current progress, completion status, and completion timestamp.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Extend the backend to store and manage trophies/badges. Each trophy should be associated with a specific goal (awarded upon goal completion) and include: id, title, description, badge image identifier, date earned, and an optional session discount code or discount percentage it unlocks. When a goal is completed, automatically award the corresponding trophy to the user and generate a discount code if applicable.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Create a Goals & Progress page accessible from the main app navigation. Display two sections: 'Therapy Milestones' and 'Wellness Streaks'. Each goal card should show the goal title, description, a progress bar (current vs. target), and a locked/unlocked state. Completed goals should display a 'Completed' badge and the date achieved.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/GoalsProgressPage.tsx",
+          "frontend/src/components/goals/GoalCard.tsx",
+          "frontend/src/hooks/useGoals.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/navigation/HeaderNavDropdown.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/GoalsProgressPage.tsx",
+          "frontend/src/components/goals/GoalCard.tsx",
+          "frontend/src/hooks/useGoals.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/navigation/HeaderNavDropdown.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Create a Trophies page (or tab within the Goals & Progress page) that displays all earned and locked trophy badges. Each earned trophy should render as a full-color visual badge image with its title and earn date. Locked trophies should be displayed as greyed-out/silhouette badges with a hint of the goal needed to unlock them. For trophies that unlock a session discount, display the discount amount and a copyable discount code prominently on the earned badge card.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/TrophiesPage.tsx",
+          "frontend/src/components/trophies/TrophyBadge.tsx",
+          "frontend/src/hooks/useTrophies.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/navigation/HeaderNavDropdown.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/TrophiesPage.tsx",
+          "frontend/src/components/trophies/TrophyBadge.tsx",
+          "frontend/src/hooks/useTrophies.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/navigation/HeaderNavDropdown.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Integrate goal progress tracking with existing user actions in the app: mood log submissions should increment streak-based wellness goals; journal entry submissions should increment journaling streak goals; session completions with Serenity should advance therapy milestone goals; group class attendance should advance group session milestone goals; and breathing/grounding/reframing tool usage should increment corresponding wellness tool goals.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useMood.ts",
+          "frontend/src/hooks/useJournal.ts",
+          "frontend/src/components/tools/BreathingTimer.tsx",
+          "frontend/src/components/tools/Grounding54321.tsx",
+          "frontend/src/components/tools/ThoughtReframingPrompt.tsx",
+          "frontend/src/hooks/useGoals.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useMood.ts",
+          "frontend/src/hooks/useJournal.ts",
+          "frontend/src/components/tools/BreathingTimer.tsx",
+          "frontend/src/components/tools/Grounding54321.tsx",
+          "frontend/src/components/tools/ThoughtReframingPrompt.tsx",
+          "frontend/src/hooks/useGoals.ts"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add a trophy badge notification or toast that appears when a user earns a new trophy. The notification should show the badge image, trophy name, and a congratulatory message. If the trophy includes a session discount, also display the discount amount in the notification.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/trophies/TrophyEarnedToast.tsx",
+          "frontend/src/hooks/useTrophies.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/trophies/TrophyEarnedToast.tsx",
+          "frontend/src/hooks/useTrophies.ts",
+          "frontend/src/App.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "build-template/README.md",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/assets/generated/trophy-badge-breathing-streak.dim_256x256.png",
+    "frontend/public/assets/generated/trophy-badge-first-session.dim_256x256.png",
+    "frontend/public/assets/generated/trophy-badge-group-session.dim_256x256.png",
+    "frontend/public/assets/generated/trophy-badge-journal-streak.dim_256x256.png",
+    "frontend/public/assets/generated/trophy-badge-mood-streak.dim_256x256.png",
+    "frontend/public/assets/generated/trophy-badge-wellness-tools.dim_256x256.png",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/goals/GoalCard.tsx",
+    "frontend/src/components/layout/AppLayout.tsx",
+    "frontend/src/components/navigation/HeaderNavDropdown.tsx",
+    "frontend/src/components/tools/BreathingTimer.tsx",
+    "frontend/src/components/tools/Grounding54321.tsx",
+    "frontend/src/components/tools/ThoughtReframingPrompt.tsx",
+    "frontend/src/components/trophies/TrophyBadge.tsx",
+    "frontend/src/components/trophies/TrophyEarnedToast.tsx",
+    "frontend/src/config.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useGoals.ts",
+    "frontend/src/hooks/useJournal.ts",
+    "frontend/src/hooks/useMood.ts",
+    "frontend/src/hooks/useTrophies.ts",
+    "frontend/src/pages/GoalsProgressPage.tsx",
+    "frontend/src/pages/TrophiesPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

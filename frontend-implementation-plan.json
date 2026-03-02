@@ -1,0 +1,153 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Goal-Oriented Progress System with Therapy Milestones, Wellness Streaks, and Trophy Badges",
+  "requirements": [
+    {
+      "id": "REQ-3",
+      "summary": "Create Goals & Progress page with Therapy Milestones and Wellness Streaks sections displaying goal cards with progress bars and completion state",
+      "acceptanceCriteria": [
+        "Page has two clearly labeled sections: Therapy Milestones and Wellness Streaks",
+        "Each goal card displays title, description, and a visual progress bar",
+        "Completed goals show a completion badge and timestamp",
+        "In-progress goals show current progress toward target",
+        "Page is accessible from main app navigation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/GoalsProgressPage.tsx",
+          "operation": "create",
+          "description": "Create a page component that fetches the current user's goals using the getUserGoals backend capability, separates them into Therapy Milestones (goalType === 'milestone') and Wellness Streaks (goalType === 'streak') sections, and renders goal cards for each section. Each goal card displays the title, description, a progress bar showing currentProgress/targetValue ratio, and completion status. For completed goals, show a 'Completed' badge and format the completionTimestamp using the time utility. Include loading and error states. Use the authorization component to ensure the user is authenticated before displaying goal data."
+        },
+        {
+          "path": "frontend/src/components/goals/GoalCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable goal card component that accepts a Goal object and displays its title, description, progress bar (using a UI Progress component or custom bar), completion badge, and formatted completion date if isCompleted is true. Style the card with Tailwind classes consistent with existing card components like DashboardTrackerCard. Show currentProgress and targetValue numerically alongside the visual progress bar."
+        },
+        {
+          "path": "frontend/src/hooks/useGoals.ts",
+          "operation": "create",
+          "description": "Create a custom hook that wraps React Query to fetch the current user's goals using actor.getUserGoals(identity.getPrincipal()). Expose a query hook (useGetUserGoals) that returns goals array, loading state, and error. Ensure the hook depends on the actor and identity being available. This hook will be used by GoalsProgressPage to load goal data."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add a route case for 'goals' (or 'goals-progress') in the hash-based router that renders the GoalsProgressPage component. Ensure this route is available in the authenticated app area and follows the same pattern as existing pages like DashboardPage or ToolsPage."
+        },
+        {
+          "path": "frontend/src/components/navigation/HeaderNavDropdown.tsx",
+          "operation": "modify",
+          "description": "Add a 'Goals & Progress' navigation item to the dropdown menu that calls onNavigate with the goals route (e.g., 'goals'). Position it logically among existing menu items, such as between Dashboard and Tools."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Create Trophies page displaying earned and locked trophy badges with visual states, unlock hints, and discount codes",
+      "acceptanceCriteria": [
+        "All trophy badges are displayed in a grid/gallery layout",
+        "Earned badges are full-color with title and date earned",
+        "Locked badges are visually muted/greyscale with unlock hint text",
+        "Trophies that carry a discount show the discount percentage and a copyable code",
+        "Page or tab is accessible from within the Goals & Progress area"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/TrophiesPage.tsx",
+          "operation": "create",
+          "description": "Create a page component that fetches the current user's earned trophies using getUserTrophies backend capability and displays them in a responsive grid layout. Render earned trophies using the generated badge images from frontend/public/assets/generated/ (trophy-badge-first-session.dim_256x256.png, trophy-badge-mood-streak.dim_256x256.png, trophy-badge-journal-streak.dim_256x256.png, trophy-badge-wellness-tools.dim_256x256.png, trophy-badge-group-session.dim_256x256.png, trophy-badge-breathing-streak.dim_256x256.png). For each earned trophy, display the badge image at full color, the title, the formatted dateEarned timestamp, and if discountCode or discountPercentage is present, show the discount with a copy-to-clipboard button. For locked trophies (not yet earned), fetch the complete trophy template list from the backend, filter out earned ones, and render them as greyscale/muted badges with a hint about the associated goal requirement. Use the authorization component to ensure the user is authenticated."
+        },
+        {
+          "path": "frontend/src/components/trophies/TrophyBadge.tsx",
+          "operation": "create",
+          "description": "Create a reusable trophy badge component that accepts a Trophy object (or trophy template) and a locked state boolean. If earned, render the badge image from frontend/public/assets/generated/<imageIdentifier> at full opacity with title and dateEarned. If locked, render the same image with CSS filter grayscale and reduced opacity, and display a hint text derived from the trophy's description or associated goal. Include a discount display section that shows discountPercentage and discountCode with a copy button when available. Use Tailwind styling consistent with the app's card design patterns."
+        },
+        {
+          "path": "frontend/src/hooks/useTrophies.ts",
+          "operation": "create",
+          "description": "Create a custom hook that wraps React Query to fetch the current user's trophies using actor.getUserTrophies(identity.getPrincipal()). Expose a query hook (useGetUserTrophies) that returns the trophies array, loading state, and error. This hook will be used by TrophiesPage to load trophy data. Ensure the hook depends on actor and identity availability."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add a route case for 'trophies' in the hash-based router that renders the TrophiesPage component. Ensure this route is accessible in the authenticated app area, potentially as a sibling to the GoalsProgressPage or as a tab/view within the goals area."
+        },
+        {
+          "path": "frontend/src/components/navigation/HeaderNavDropdown.tsx",
+          "operation": "modify",
+          "description": "Add a 'Trophies' navigation item to the dropdown menu that calls onNavigate with the trophies route (e.g., 'trophies'). Position it near the Goals & Progress item or as a combined menu group for achievements."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Integrate goal progress tracking with existing user actions: mood logs, journal entries, therapy sessions, group classes, and wellness tool usage",
+      "acceptanceCriteria": [
+        "Logging a mood entry increments the mood streak goal counter",
+        "Submitting a journal entry increments journaling streak goal counter",
+        "Completing a therapy session with Serenity advances the relevant milestone goal",
+        "Using a wellness tool (breathing, grounding, reframing) increments its corresponding goal",
+        "After any increment, if the goal target is met, the trophy is automatically awarded"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useMood.ts",
+          "operation": "modify",
+          "description": "After successfully adding a mood entry using actor.addMood, call actor.recordToolUsage with GoalCategory.moodLog to increment the mood logging goal counter. Invalidate both mood and goals queries to refresh the UI. Ensure error handling for the recordToolUsage call."
+        },
+        {
+          "path": "frontend/src/hooks/useJournal.ts",
+          "operation": "modify",
+          "description": "After successfully adding a journal entry using actor.addJournalEntry, call actor.recordToolUsage with GoalCategory.journaling to increment the journaling streak goal counter. Invalidate both journal and goals queries to refresh the UI. Ensure error handling for the recordToolUsage call."
+        },
+        {
+          "path": "frontend/src/components/tools/BreathingTimer.tsx",
+          "operation": "modify",
+          "description": "When the breathing exercise is completed (after all cycles finish), call actor.recordToolUsage with GoalCategory.breathingTool to increment the breathing tool usage goal counter. Invalidate goals queries to reflect updated progress. Handle errors gracefully and ensure the tool remains functional even if the backend call fails."
+        },
+        {
+          "path": "frontend/src/components/tools/Grounding54321.tsx",
+          "operation": "modify",
+          "description": "When the grounding exercise is completed (all steps finished), call actor.recordToolUsage with GoalCategory.groundingTool to increment the grounding tool usage goal counter. Invalidate goals queries to refresh progress. Handle errors gracefully without blocking the tool's functionality."
+        },
+        {
+          "path": "frontend/src/components/tools/ThoughtReframingPrompt.tsx",
+          "operation": "modify",
+          "description": "When the thought reframing exercise is completed (balanced thought submitted), call actor.recordToolUsage with GoalCategory.reframingTool to increment the reframing tool usage goal counter. Invalidate goals queries to update progress display. Handle errors gracefully."
+        },
+        {
+          "path": "frontend/src/hooks/useGoals.ts",
+          "operation": "modify",
+          "description": "Add a mutation hook (useRecordToolUsage) that wraps actor.recordToolUsage and invalidates the goals query cache on success. Export this hook so tool components and other pages can use it to track goal progress. Ensure proper error handling and loading states."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add trophy badge notification toast when a user earns a new trophy, showing badge image, title, congratulations, and discount if applicable",
+      "acceptanceCriteria": [
+        "A toast or modal notification appears immediately when a trophy is earned",
+        "Notification shows the badge visual, trophy title, and congratulatory message",
+        "If the trophy unlocks a discount, the discount is mentioned in the notification",
+        "Notification is dismissible"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/trophies/TrophyEarnedToast.tsx",
+          "operation": "create",
+          "description": "Create a toast component that displays when a trophy is earned. Accept props for trophy title, badge imageIdentifier (to render the generated badge image from frontend/public/assets/generated/), congratulatory message, and optional discountPercentage/discountCode. Render the badge image, trophy name, celebration message, and discount info if present. Use a dismissible toast UI pattern consistent with existing notifications (consider using shadcn/ui Toast component). Include an onClick dismiss handler and auto-dismiss after a few seconds."
+        },
+        {
+          "path": "frontend/src/hooks/useTrophies.ts",
+          "operation": "modify",
+          "description": "Add polling or a query refetch mechanism that checks for newly earned trophies by comparing the current trophy list with a cached previous list. When a new trophy is detected, trigger the TrophyEarnedToast display. Alternatively, if the backend supports a recent trophy query, use that to detect new awards. Store the last known trophy count or IDs in React state or session storage to detect changes. Expose a hook (useNewTrophyDetection) that returns the newly earned trophy object when detected."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Import and integrate the TrophyEarnedToast component and useNewTrophyDetection hook in the App component. When a new trophy is detected, render the TrophyEarnedToast with the trophy details. Ensure the toast appears globally above other content and is properly positioned using Tailwind or portal rendering if necessary."
+        }
+      ]
+    }
+  ]
+}

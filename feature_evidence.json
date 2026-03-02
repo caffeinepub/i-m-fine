@@ -1,0 +1,100 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-goals-progress-page-accessible-from-the-main-app-navigation-display-two-sections-therapy-milestones-and-wellness-streaks-each-goal-card-should-show-the-goal-title-description-a-progress-bar-current-vs-target-and-a-locked-unlocked-state-completed-goals-should-display-a-completed-badge-and-the-date-achieved",
+      "featureTitle": "Create a Goals & Progress page accessible from the main app navigation. Display two sections: 'Therapy Milestones' and 'Wellness Streaks'. Each goal card should show the goal title, description, a progress bar (current vs. target), and a locked/unlocked state. Completed goals should display a 'Completed' badge and the date achieved.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/goals/GoalCard.tsx",
+        "frontend/src/components/navigation/HeaderNavDropdown.tsx",
+        "frontend/src/hooks/useGoals.ts",
+        "frontend/src/pages/GoalsProgressPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-trophies-page-or-tab-within-the-goals-progress-page-that-displays-all-earned-and-locked-trophy-badges-each-earned-trophy-should-render-as-a-full-color-visual-badge-image-with-its-title-and-earn-date-locked-trophies-should-be-displayed-as-greyed-out-silhouette-badges-with-a-hint-of-the-goal-needed-to-unlock-them-for-trophies-that-unlock-a-session-discount-display-the-discount-amount-and-a-copyable-discount-code-prominently-on-the-earned-badge-card",
+      "featureTitle": "Create a Trophies page (or tab within the Goals & Progress page) that displays all earned and locked trophy badges. Each earned trophy should render as a full-color visual badge image with its title and earn date. Locked trophies should be displayed as greyed-out/silhouette badges with a hint of the goal needed to unlock them. For trophies that unlock a session discount, display the discount amount and a copyable discount code prominently on the earned badge card.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/navigation/HeaderNavDropdown.tsx",
+        "frontend/src/components/trophies/TrophyBadge.tsx",
+        "frontend/src/hooks/useTrophies.ts",
+        "frontend/src/pages/TrophiesPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-integrate-goal-progress-tracking-with-existing-user-actions-in-the-app-mood-log-submissions-should-increment-streak-based-wellness-goals-journal-entry-submissions-should-increment-journaling-streak-goals-session-completions-with-serenity-should-advance-therapy-milestone-goals-group-class-attendance-should-advance-group-session-milestone-goals-and-breathing-grounding-reframing-tool-usage-should-increment-corresponding-wellness-tool-goals",
+      "featureTitle": "Integrate goal progress tracking with existing user actions in the app: mood log submissions should increment streak-based wellness goals; journal entry submissions should increment journaling streak goals; session completions with Serenity should advance therapy milestone goals; group class attendance should advance group session milestone goals; and breathing/grounding/reframing tool usage should increment corresponding wellness tool goals.",
+      "files": [
+        "frontend/src/components/tools/BreathingTimer.tsx",
+        "frontend/src/components/tools/Grounding54321.tsx",
+        "frontend/src/components/tools/ThoughtReframingPrompt.tsx",
+        "frontend/src/hooks/useGoals.ts",
+        "frontend/src/hooks/useJournal.ts",
+        "frontend/src/hooks/useMood.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-trophy-badge-notification-or-toast-that-appears-when-a-user-earns-a-new-trophy-the-notification-should-show-the-badge-image-trophy-name-and-a-congratulatory-message-if-the-trophy-includes-a-session-discount-also-display-the-discount-amount-in-the-notification",
+      "featureTitle": "Add a trophy badge notification or toast that appears when a user earns a new trophy. The notification should show the badge image, trophy name, and a congratulatory message. If the trophy includes a session discount, also display the discount amount in the notification.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/trophies/TrophyEarnedToast.tsx",
+        "frontend/src/hooks/useTrophies.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

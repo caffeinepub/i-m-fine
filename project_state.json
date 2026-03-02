@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "A trauma-informed mental health awareness app featuring AI therapist 'Serenity' who conducts onboarding intake sessions, builds personalized therapy plans using CBT/DBT, hosts real-time group sessions with avatar privacy, and manages a purchasable session calendar. Users track therapy milestones and wellness streaks, earning visual trophy badges that unlock session discounts.",
+  "architectural_notes": [
+    "Real-time group session presence is polling-based (no WebSocket support); users appear as avatars with pseudonyms",
+    "AI therapist 'Serenity' uses built-in LLM integration applying CBT, DBT, and other evidence-based therapy frameworks",
+    "Monetization: therapy plans, one-on-one sessions, and group classes are purchasable; trophies unlock session discounts"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Glowing gold trophy cup badge illustration for 'First Session' milestone award (trophy-badge-first-session.dim_256x256.png)\n- Teal flame streak badge illustration for 'Mood Streak' wellness achievement (trophy-badge-mood-streak.dim_256x256.png)\n- Purple star badge illustration for 'Journaling Streak' wellness achievement (trophy-badge-journal-streak.dim_256x256.png)\n- Green lotus flower badge illustration for 'Wellness Tools' milestone achievement (trophy-badge-wellness-tools.dim_256x256.png)\n- Rose gold ribbon badge illustration for 'Group Session Attendee' milestone achievement (trophy-badge-group-session.dim_256x256.png)\n- Silver crescent moon badge illustration for 'Breathing Streak' wellness achievement (trophy-badge-breathing-streak.dim_256x256.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-a-goals-progress-page-accessible-from-the-main-app-navigation-display-two-sections-therapy-milestones-and-wellness-streaks-each-goal-card-should-show-the-goal-title-description-a-progress-bar-current-vs-target-and-a-locked-unlocked-state-completed-goals-should-display-a-completed-badge-and-the-date-achieved",
+      "title": "Create a Goals & Progress page accessible from the main app navigation. Display two sections: 'Therapy Milestones' and 'Wellness Streaks'. Each goal card should show the goal title, description, a progress bar (current vs. target), and a locked/unlocked state. Completed goals should display a 'Completed' badge and the date achieved.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-trophies-page-or-tab-within-the-goals-progress-page-that-displays-all-earned-and-locked-trophy-badges-each-earned-trophy-should-render-as-a-full-color-visual-badge-image-with-its-title-and-earn-date-locked-trophies-should-be-displayed-as-greyed-out-silhouette-badges-with-a-hint-of-the-goal-needed-to-unlock-them-for-trophies-that-unlock-a-session-discount-display-the-discount-amount-and-a-copyable-discount-code-prominently-on-the-earned-badge-card",
+      "title": "Create a Trophies page (or tab within the Goals & Progress page) that displays all earned and locked trophy badges. Each earned trophy should render as a full-color visual badge image with its title and earn date. Locked trophies should be displayed as greyed-out/silhouette badges with a hint of the goal needed to unlock them. For trophies that unlock a session discount, display the discount amount and a copyable discount code prominently on the earned badge card.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-goal-progress-tracking-with-existing-user-actions-in-the-app-mood-log-submissions-should-increment-streak-based-wellness-goals-journal-entry-submissions-should-increment-journaling-streak-goals-session-completions-with-serenity-should-advance-therapy-milestone-goals-group-class-attendance-should-advance-group-session-milestone-goals-and-breathing-grounding-reframing-tool-usage-should-increment-corresponding-wellness-tool-goals",
+      "title": "Integrate goal progress tracking with existing user actions in the app: mood log submissions should increment streak-based wellness goals; journal entry submissions should increment journaling streak goals; session completions with Serenity should advance therapy milestone goals; group class attendance should advance group session milestone goals; and breathing/grounding/reframing tool usage should increment corresponding wellness tool goals.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-trophy-badge-notification-or-toast-that-appears-when-a-user-earns-a-new-trophy-the-notification-should-show-the-badge-image-trophy-name-and-a-congratulatory-message-if-the-trophy-includes-a-session-discount-also-display-the-discount-amount-in-the-notification",
+      "title": "Add a trophy badge notification or toast that appears when a user earns a new trophy. The notification should show the badge image, trophy name, and a congratulatory message. If the trophy includes a session discount, also display the discount amount in the notification.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Serenity AI onboarding intake session on signup using CBT/DBT to generate personalized therapy plan",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Customized therapy plans with paid one-on-one talk sessions with Serenity",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Group sessions calendar where Serenity posts purchasable group classes",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Real-time group sessions with user avatars and privacy-preserving pseudonyms (polling-based)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "User authentication, login, and session history tracking",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Goal-oriented progress system with therapy milestones and personal wellness streak targets",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Trophy/badge system: visual badges awarded for milestone/streak goals that also unlock session discounts",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Extend the backend to store and manage user goals, including therapy milestone goals (e.g., 'Complete 1st session with Serenity', 'Finish 3 CBT exercises', 'Attend a group class') and personal wellness streak targets (e.g., 'Log mood 7 days in a row', 'Use breathing tool 5 times', 'Journal for 3 consecutive days'). Each goal should track: id, title, description, goal type (milestone or streak), target value, current progress, completion status, and completion timestamp.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Extend the backend to store and manage trophies/badges. Each trophy should be associated with a specific goal (awarded upon goal completion) and include: id, title, description, badge image identifier, date earned, and an optional session discount code or discount percentage it unlocks. When a goal is completed, automatically award the corresponding trophy to the user and generate a discount code if applicable.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Serenity Mental Health App",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
